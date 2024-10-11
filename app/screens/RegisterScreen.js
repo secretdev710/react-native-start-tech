@@ -8,24 +8,30 @@ import Header from "../components/Header";
 import Button from "../components/Button";
 import TextInput from "../components/TextInput";
 import BackButton from "../components/BackButton";
+import SelectInput from "../components/SelectInput";
 import { theme } from "../core/theme";
 import { emailValidator } from "../helpers/emailValidator";
 import { passwordValidator } from "../helpers/passwordValidator";
 import { nameValidator } from "../helpers/nameValidator";
+import { ageValidator } from "../helpers/ageValidator";
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState({ value: "", error: "" });
   const [email, setEmail] = useState({ value: "", error: "" });
   const [password, setPassword] = useState({ value: "", error: "" });
+  const [gender, setGender] = useState({ value: "male", error: "" });
+  const [age, setAge] = useState({value: 20, error: ""});
 
   const onSignUpPressed = () => {
     const nameError = nameValidator(name.value);
     const emailError = emailValidator(email.value);
     const passwordError = passwordValidator(password.value);
+    const ageError = ageValidator(age.value);
     if (emailError || passwordError || nameError) {
       setName({ ...name, error: nameError });
       setEmail({ ...email, error: emailError });
       setPassword({ ...password, error: passwordError });
+      setAge({...age, error: ageError});
       return;
     }
     navigation.reset({
@@ -47,6 +53,7 @@ export default function RegisterScreen({ navigation }) {
         error={!!name.error}
         errorText={name.error}
       />
+
       <TextInput
         label="Email"
         returnKeyType="next"
@@ -59,6 +66,28 @@ export default function RegisterScreen({ navigation }) {
         textContentType="emailAddress"
         keyboardType="email-address"
       />
+
+      <SelectInput
+        label="Gender"
+        onValueChange={(value) => setGender(value)}
+        returnKeyType="next"
+        value={gender.value}
+        items={[
+          { label: "Male", value: 'male' },
+          { label: "Female", value: 'female' }
+        ]}
+        placeholder={{}}
+      />
+
+      <TextInput
+        label="Age"
+        returnKeyType="next"
+        value={age.value}
+        onChangeText={(num) => setAge({ value: num, error: "" })}
+        error={!!age.error}
+        errorText={age.error}
+      />
+
       <TextInput
         label="Password"
         returnKeyType="done"
